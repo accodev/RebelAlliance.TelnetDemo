@@ -12,7 +12,7 @@ internal class TelnetServer(string host, int port, IClientFactory clientFactory,
     public async Task Execute(CancellationToken cancellationToken)
     {
         _listener.Start();
-        logger.LogInformation($"Telnet server started on {host}:{port}");
+        logger.LogInformation("Telnet server started on {Host}:{Port}", host, port);
 
         await AcceptClientsAsync(cancellationToken);
     }
@@ -24,9 +24,9 @@ internal class TelnetServer(string host, int port, IClientFactory clientFactory,
             try
             {
                 var tcpClient = await _listener.AcceptTcpClientAsync(cancellationToken);
-                logger.LogInformation("Client connected.");
 
                 var id = (short)Random.Shared.Next(0, short.MaxValue);
+                logger.LogInformation("Client {Id} connected.", id);
                 var client = clientFactory.CreateClient(tcpClient, id);
                 _ = client.Handle(cancellationToken);
             }

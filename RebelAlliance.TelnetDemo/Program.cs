@@ -19,7 +19,7 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddSingleton<IServerFactory, TelnetServerFactory>();
             services.AddSingleton<IClientFactory, ChatClientFactory>();
             services.AddSingleton<IChatRoom, ChatRoom>();
-            services.AddTransient<IClient, ChatClient>();
+            services.AddTransient<IClient, TelnetClient>();
             services.AddTransient<IServer, TelnetServer>();
 
             services.AddHostedService<HostedService>();
