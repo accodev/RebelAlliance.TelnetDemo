@@ -1,6 +1,30 @@
-﻿// See https://aka.ms/new-console-template for more information
-
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RebelAlliance.TelnetDemo;
+using RebelAlliance.TelnetDemo.Chat;
+using RebelAlliance.TelnetDemo.Interfaces;
+using RebelAlliance.TelnetDemo.Telnet;
 
-var server = new TelnetServer("0.0.0.0", 9999);
-await server.Start();
+
+CreateHostBuilder(args).Build().Run();
+
+static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureServices((context, services) =>
+        {
+            services.Configure<ServerSettings>(context.Configuration.GetSection("ServerSettings"));
+
+            services.AddLogging();
+
+            services.AddSingleton<IServerFactory, TelnetServerFactory>();
+            services.AddSingleton<IClientFactory, ChatClientFactory>();
+            services.AddSingleton<IChatRoom, ChatRoom>();
+            services.AddTransient<IClient, ChatClient>();
+            services.AddTransient<IServer, TelnetServer>();
+
+            services.AddHostedService<HostedService>();
+        })
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            var env = hostingContext.HostingEnvironment;
+        });

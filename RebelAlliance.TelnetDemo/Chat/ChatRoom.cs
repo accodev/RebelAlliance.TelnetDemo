@@ -1,6 +1,8 @@
-﻿namespace RebelAlliance.TelnetDemo;
+﻿using RebelAlliance.TelnetDemo.Interfaces;
 
-internal class ChatRoom : IObservable<string>
+namespace RebelAlliance.TelnetDemo.Chat;
+
+internal class ChatRoom : IChatRoom
 {
     private readonly object _sync = new();
     private readonly List<User> _subscribers = [];
@@ -8,9 +10,9 @@ internal class ChatRoom : IObservable<string>
     public IDisposable Subscribe(IObserver<string> observer)
     {
         var sub = new User(this, observer);
-        lock (this._sync)
+        lock (_sync)
         {
-            this._subscribers.Add(sub);
+            _subscribers.Add(sub);
         }
 
         return sub;
@@ -18,17 +20,17 @@ internal class ChatRoom : IObservable<string>
 
     private void Unsubscribe(User sub)
     {
-        lock (this._sync)
+        lock (_sync)
         {
-            this._subscribers.Remove(sub);
+            _subscribers.Remove(sub);
         }
     }
 
     public void SendMessage(string message)
     {
-        lock (this._sync)
+        lock (_sync)
         {
-            foreach (var subscription in this._subscribers)
+            foreach (var subscription in _subscribers)
             {
                 subscription.Observer.OnNext(message);
             }
@@ -43,8 +45,8 @@ internal class ChatRoom : IObservable<string>
 
         public void Dispose()
         {
-            this._parent?.Unsubscribe(this);
-            this._parent = null;
+            _parent?.Unsubscribe(this);
+            _parent = null;
         }
     }
 }
