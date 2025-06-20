@@ -1,6 +1,6 @@
 ﻿namespace RebelAlliance.TelnetDemo.Interfaces;
 
-internal interface IServer
+public interface IServer
 {
     Task Execute(CancellationToken cancellationToken);
 }

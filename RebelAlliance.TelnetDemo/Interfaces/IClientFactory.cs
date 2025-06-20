@@ -2,7 +2,7 @@
 
 namespace RebelAlliance.TelnetDemo.Interfaces;
 
-internal interface IClientFactory
+public interface IClientFactory
 {
     IClient CreateClient(TcpClient tcpClient, short id);
 }

@@ -1,6 +1,6 @@
 ﻿namespace RebelAlliance.TelnetDemo;
 
-internal class ServerSettings
+public class ServerSettings
 {
     public string Host { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 9000;

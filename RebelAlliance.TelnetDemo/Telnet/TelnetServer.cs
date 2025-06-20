@@ -4,7 +4,11 @@ using System.Net.Sockets;
 
 namespace RebelAlliance.TelnetDemo.Telnet;
 
-internal class TelnetServer(string host, int port, IClientFactory clientFactory, ILogger<TelnetServer> logger) : IServer
+public class TelnetServer(string host, 
+    int port, 
+    IClientFactory clientFactory, 
+    ILogger<TelnetServer> logger, 
+    IRandomProvider randomProvider) : IServer
 {
     private bool _isRunning = true;
     private readonly TcpListener _listener = new(System.Net.IPAddress.Parse(host), port);
@@ -25,8 +29,9 @@ internal class TelnetServer(string host, int port, IClientFactory clientFactory,
             {
                 var tcpClient = await _listener.AcceptTcpClientAsync(cancellationToken);
 
-                var id = (short)Random.Shared.Next(0, short.MaxValue);
+                var id = randomProvider.Provide(0, short.MaxValue);
                 logger.LogInformation("Client {Id} connected.", id);
+
                 var client = clientFactory.CreateClient(tcpClient, id);
                 _ = client.Handle(cancellationToken);
             }

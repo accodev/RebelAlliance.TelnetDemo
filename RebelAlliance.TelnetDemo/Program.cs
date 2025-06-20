@@ -7,6 +7,7 @@ using RebelAlliance.TelnetDemo.Telnet;
 
 
 CreateHostBuilder(args).Build().Run();
+return;
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
@@ -17,9 +18,10 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddLogging();
 
             services.AddSingleton<IServerFactory, TelnetServerFactory>();
-            services.AddSingleton<IClientFactory, ChatClientFactory>();
+            services.AddSingleton<IClientFactory, TelnetClientFactory>();
             services.AddSingleton<ITelnetFilter, TelnetFilter>();
             services.AddSingleton<IChatRoom, ChatRoom>();
+            services.AddSingleton<IRandomProvider, RandomProvider>();
             services.AddTransient<IClient, TelnetClient>();
             services.AddTransient<IServer, TelnetServer>();
 

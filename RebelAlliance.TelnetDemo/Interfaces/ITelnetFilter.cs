@@ -1,6 +1,6 @@
 ﻿namespace RebelAlliance.TelnetDemo.Interfaces;
 
-internal interface ITelnetFilter
+public interface ITelnetFilter
 {
     byte[] FilterCommands(byte[] data, int length);
 }

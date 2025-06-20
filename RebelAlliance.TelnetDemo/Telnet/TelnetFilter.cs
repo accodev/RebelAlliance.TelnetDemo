@@ -2,7 +2,7 @@
 
 namespace RebelAlliance.TelnetDemo.Telnet;
 
-internal class TelnetFilter : ITelnetFilter
+public class TelnetFilter : ITelnetFilter
 {
     private enum Command
     {
@@ -24,7 +24,6 @@ internal class TelnetFilter : ITelnetFilter
                 if (i + 1 < length && data[i + 1] >= (byte)Command.Will && data[i + 1] <= (byte)Command.Dont) i += 2;
                 else if (i + 1 < length && data[i + 1] == (byte)Command.Iac) // Escaped IAC
                 {
-                    result.Add((byte)Command.Iac);
                     i++;
                 }
                 else i++;

@@ -2,7 +2,7 @@
 
 namespace RebelAlliance.TelnetDemo.Chat;
 
-internal class ChatRoom : IChatRoom
+public class ChatRoom : IChatRoom
 {
     private readonly object _sync = new();
     private readonly List<User> _subscribers = [];

@@ -1,6 +1,6 @@
 ﻿namespace RebelAlliance.TelnetDemo.Interfaces;
 
-internal interface IServerFactory
+public interface IServerFactory
 {
     IServer CreateServer();
 }

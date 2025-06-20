@@ -4,13 +4,14 @@ using RebelAlliance.TelnetDemo.Interfaces;
 
 namespace RebelAlliance.TelnetDemo.Telnet;
 
-internal class TelnetServerFactory(IClientFactory clientFactory, 
+public class TelnetServerFactory(IClientFactory clientFactory, 
     IOptions<ServerSettings> options, 
-    ILogger<TelnetServer> logger) : IServerFactory
+    ILogger<TelnetServer> logger,
+    IRandomProvider randomProvider) : IServerFactory
 {
     public IServer CreateServer()
     {
-        var _settings = options.Value;
-        return new TelnetServer(_settings.Host, _settings.Port, clientFactory, logger);
+        var settings = options.Value;
+        return new TelnetServer(settings.Host, settings.Port, clientFactory, logger, randomProvider);
     }
 }

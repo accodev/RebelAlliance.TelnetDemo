@@ -5,13 +5,13 @@ using System.Text;
 
 namespace RebelAlliance.TelnetDemo.Telnet;
 
-internal class TelnetClient(TcpClient tcpClient, 
+public class TelnetClient(TcpClient tcpClient, 
     IChatRoom chatRoom, 
     short id, 
     ILogger<TelnetClient> logger,
     ITelnetFilter telnetFilter) : IClient, IDisposable
 {
-    private const string EOL = "\r\n";
+    private const string Eol = "\r\n";
 
     private string Name() => $"Client{id}";
 
@@ -36,7 +36,7 @@ internal class TelnetClient(TcpClient tcpClient,
 
                 logger.LogTrace("[{Client}] Message received: {Message}", Name(), message);
 
-                var response = Encoding.ASCII.GetBytes($"{message}{EOL}");
+                var response = Encoding.ASCII.GetBytes($"{message}{Eol}");
                 if(!stream.CanWrite)
                 {
                     logger.LogWarning("[{Client}] Stream is not writable, cannot send message", Name());
@@ -53,7 +53,7 @@ internal class TelnetClient(TcpClient tcpClient,
 
         try
         {
-            var response = Encoding.ASCII.GetBytes($"Welcome {Name()}!{EOL}");
+            var response = Encoding.ASCII.GetBytes($"Welcome {Name()}!{Eol}");
             await stream.WriteAsync(response, 0, response.Length, cancellationToken);
 
             while (true)
@@ -64,7 +64,7 @@ internal class TelnetClient(TcpClient tcpClient,
                     var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
                     if (bytesRead == 0)
                     {
-                        throw new Exception($"[{Name()}] Disconnected");
+                        throw new ClientDisconnectedException($"[{Name()}] Disconnected");
                     }
 
                     if (buffer[0] == 3)
@@ -74,16 +74,16 @@ internal class TelnetClient(TcpClient tcpClient,
 
                     var cleanData = telnetFilter.FilterCommands(buffer, bytesRead);
                     message += Encoding.ASCII.GetString(cleanData);
-                } while (!message.Contains(EOL));
+                } while (!message.Contains(Eol));
 
-                message = message.Replace(EOL, string.Empty);
+                message = message.Replace(Eol, string.Empty);
 
                 if (message.Length > 0)
                 {
                     chatRoom.SendMessage($"{FormatMessage(message)}");
                     logger.LogTrace("[{Client}] Message Sent: {Message}", Name(), message);
 
-                    var newLine = Encoding.ASCII.GetBytes(EOL);
+                    var newLine = Encoding.ASCII.GetBytes(Eol);
                     await stream.WriteAsync(newLine, 0, newLine.Length, cancellationToken);
                 }
 
