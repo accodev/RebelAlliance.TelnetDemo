@@ -4,10 +4,10 @@ using System.Net.Sockets;
 
 namespace RebelAlliance.TelnetDemo.Telnet;
 
-internal class ChatClientFactory(IChatRoom chatRoom, ILogger<TelnetClient> logger) : IClientFactory
+internal class ChatClientFactory(IChatRoom chatRoom, ILogger<TelnetClient> logger, ITelnetFilter telnetFilter) : IClientFactory
 {
     public IClient CreateClient(TcpClient tcpClient, short id)
     {
-        return new TelnetClient(tcpClient, chatRoom, id, logger);
+        return new TelnetClient(tcpClient, chatRoom, id, logger, telnetFilter);
     }
 }

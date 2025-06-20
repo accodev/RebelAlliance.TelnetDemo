@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace RebelAlliance.TelnetDemo.Interfaces;
 
-namespace RebelAlliance.TelnetDemo.Interfaces
+internal interface ITelnetFilter
 {
-    internal interface ITelnetFilter
-    {
-        byte[] FilterCommands(byte[] data, int length);
-    }
+    byte[] FilterCommands(byte[] data, int length);
 }
