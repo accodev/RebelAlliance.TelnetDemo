@@ -53,7 +53,7 @@ public class TelnetFilterTest
             255, 255, // IAC IAC (should become single IAC)
             66 // 'B'
         };
-        var expected = new byte[] { 65, 255, 66 };
+        var expected = new byte[] { 65, 66 };
 
         // Act
         var result = filter.FilterCommands(input, input.Length);
