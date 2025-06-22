@@ -22,8 +22,9 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddSingleton<ITelnetFilter, TelnetFilter>();
             services.AddSingleton<IChatRoom, ChatRoom>();
             services.AddSingleton<IRandomProvider, RandomProvider>();
+            services.AddSingleton<IServer, TelnetServer>();
+
             services.AddTransient<IClient, TelnetClient>();
-            services.AddTransient<IServer, TelnetServer>();
 
             services.AddHostedService<HostedService>();
         })
