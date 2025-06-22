@@ -12,12 +12,13 @@ public class TelnetClient(TcpClient tcpClient,
     ITelnetFilter telnetFilter) : IClient, IDisposable
 {
     private const string Eol = "\r\n";
+    private const int ExitCommand = 3;
 
     private string Name() => $"Client{id}";
 
     private string FormatMessage(string message)
     {
-        return $"{Name()}: {message}\r\n";
+        return $"{Name()}: {message}{Eol}";
     }
 
     public async Task Handle(CancellationToken cancellationToken)
@@ -67,7 +68,7 @@ public class TelnetClient(TcpClient tcpClient,
                         throw new ClientDisconnectedException($"[{Name()}] Disconnected");
                     }
 
-                    if (buffer[0] == 3)
+                    if (buffer.Length > 1 && buffer[0] == ExitCommand)
                     {
                         throw new ClientWantsToLeaveException($"Client requested to exit.");
                     }
@@ -76,7 +77,7 @@ public class TelnetClient(TcpClient tcpClient,
                     message += Encoding.ASCII.GetString(cleanData);
                 } while (!message.Contains(Eol));
 
-                message = message.Replace(Eol, string.Empty);
+                message = message.Replace(Eol, string.Empty); 
 
                 if (message.Length > 0)
                 {
